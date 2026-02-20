@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</h2>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number">{{ total_students }}</div>
+                        <div class="stat-label">Students</div>
+                    </div>
+                    <i class="fas fa-user-graduate fa-3x" style="color: var(--info-color); opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number">{{ total_companies }}</div>
+                        <div class="stat-label">Companies</div>
+                    </div>
+                    <i class="fas fa-building fa-3x" style="color: var(--success-color); opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number">{{ total_drives }}</div>
+                        <div class="stat-label">Drives</div>
+                    </div>
+                    <i class="fas fa-briefcase fa-3x" style="color: var(--warning-color); opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card danger">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="stat-number">{{ total_applications }}</div>
+                        <div class="stat-label">Applications</div>
+                    </div>
+                    <i class="fas fa-file-alt fa-3x" style="color: var(--danger-color); opacity: 0.3;"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-building me-2"></i>Pending Company Approvals</h5>
+            </div>
+            <div class="card-body">
+                {% if pending_companies %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for company in pending_companies %}
+                                <tr>
+                                    <td><strong>{{ company.name }}</strong></td>
+                                    <td>{{ company.email }}</td>
+                                    <td>
+                                        <a href="{{ url_for('approve_company', company_id=company.id) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="{{ url_for('reject_company', company_id=company.id) }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h5 class="mt-3">No Pending Approvals</h5>
+                        <p>All companies have been reviewed.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-briefcase me-2"></i>Pending Drive Approvals</h5>
+            </div>
+            <div class="card-body">
+                {% if pending_drives %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Company</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for drive in pending_drives %}
+                                <tr>
+                                    <td><strong>{{ drive.title }}</strong></td>
+                                    <td>{{ drive.company_name }}</td>
+                                    <td>
+                                        <a href="{{ url_for('admin_drive_detail', drive_id=drive.id) }}" class="btn btn-sm btn-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('approve_drive', drive_id=drive.id) }}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="{{ url_for('reject_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <i class="fas fa-check-circle"></i>
+                        <h5 class="mt-3">No Pending Approvals</h5>
+                        <p>All drives have been reviewed.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5><i class="fas fa-cog me-2"></i>Quick Actions</h5>
+    </div>
+    <div class="card-body">
+        <div class="action-buttons">
+            <a href="{{ url_for('admin_students') }}" class="btn btn-primary">
+                <i class="fas fa-user-graduate me-2"></i>Manage Students
+            </a>
+            <a href="{{ url_for('admin_companies') }}" class="btn btn-success">
+                <i class="fas fa-building me-2"></i>Manage Companies
+            </a>
+            <a href="{{ url_for('admin_drives') }}" class="btn btn-warning">
+                <i class="fas fa-briefcase me-2"></i>View All Drives
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

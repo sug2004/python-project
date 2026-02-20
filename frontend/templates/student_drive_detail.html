@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block title %}Drive Details - Placement Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2><i class="fas fa-briefcase me-2"></i>{{ drive['title'] }}</h2>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i>Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-info-circle me-2"></i>Drive Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="drive-detail-section">
+                    <h6><i class="fas fa-building me-2"></i>Company Details</h6>
+                    <div class="info-row">
+                        <div class="info-label">Company Name:</div>
+                        <div class="info-value">{{ drive['company_name'] }}</div>
+                    </div>
+                    {% if drive['company_description'] %}
+                    <div class="info-row">
+                        <div class="info-label">About Company:</div>
+                        <div class="info-value">{{ drive['company_description'] }}</div>
+                    </div>
+                    {% endif %}
+                    {% if drive['website'] %}
+                    <div class="info-row">
+                        <div class="info-label">Website:</div>
+                        <div class="info-value">
+                            <a href="{{ drive['website'] }}" target="_blank">{{ drive['website'] }}</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if drive['hr_contact'] %}
+                    <div class="info-row">
+                        <div class="info-label">HR Contact:</div>
+                        <div class="info-value">{{ drive['hr_contact'] }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="drive-detail-section">
+                    <h6><i class="fas fa-briefcase me-2"></i>Job Details</h6>
+                    <div class="info-row">
+                        <div class="info-label">Job Title:</div>
+                        <div class="info-value"><strong>{{ drive['title'] }}</strong></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Description:</div>
+                        <div class="info-value">{{ drive['description'] }}</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Eligibility Criteria:</div>
+                        <div class="info-value">{{ drive['eligibility_criteria'] }}</div>
+                    </div>
+                    {% if drive['min_cgpa'] %}
+                    <div class="info-row">
+                        <div class="info-label">Minimum CGPA:</div>
+                        <div class="info-value">
+                            <span class="badge {% if student['cgpa'] >= drive['min_cgpa'] %}bg-success{% else %}bg-danger{% endif %}">
+                                {{ drive['min_cgpa'] }}
+                            </span>
+                            {% if student['cgpa'] >= drive['min_cgpa'] %}
+                                <span class="text-success ms-2"><i class="fas fa-check-circle"></i> You are eligible</span>
+                            {% else %}
+                                <span class="text-danger ms-2"><i class="fas fa-times-circle"></i> You don't meet the requirement</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if drive['deadline'] %}
+                    <div class="info-row">
+                        <div class="info-label">Application Deadline:</div>
+                        <div class="info-value">
+                            <i class="fas fa-calendar-alt me-1"></i>{{ drive['deadline'] }}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="info-row">
+                        <div class="info-label">Status:</div>
+                        <div class="info-value">
+                            <span class="badge badge-{{ drive['status'] }}">{{ drive['status']|upper }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card stat-card info">
+            <div class="card-body text-center">
+                <i class="fas fa-users fa-3x mb-3" style="color: var(--info-color);"></i>
+                <div class="stat-number">{{ applicant_count }}</div>
+                <div class="stat-label">Total Applicants</div>
+            </div>
+        </div>
+
+        {% if application %}
+        <div class="card">
+            <div class="card-header">
+                <h5><i class="fas fa-file-alt me-2"></i>Your Application</h5>
+            </div>
+            <div class="card-body">
+                <div class="info-row">
+                    <div class="info-label">Applied On:</div>
+                    <div class="info-value">{{ application['applied_at'] }}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Status:</div>
+                    <div class="info-value">
+                        <span class="badge 
+                            {% if application['status'] == 'applied' %}badge-pending
+                            {% elif application['status'] == 'shortlisted' %}bg-info
+                            {% elif application['status'] == 'selected' %}badge-approved
+                            {% else %}badge-rejected{% endif %}">
+                            {{ application['status']|upper }}
+                        </span>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    {% if application['status'] == 'applied' %}
+                        Your application is under review.
+                    {% elif application['status'] == 'shortlisted' %}
+                        Congratulations! You have been shortlisted.
+                    {% elif application['status'] == 'selected' %}
+                        Congratulations! You have been selected.
+                    {% else %}
+                        Your application was not successful this time.
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center">
+                {% if drive['status'] == 'approved' %}
+                    {% if drive['min_cgpa'] and student['cgpa'] < drive['min_cgpa'] %}
+                        <i class="fas fa-exclamation-triangle fa-3x mb-3 text-warning"></i>
+                        <h5>Not Eligible</h5>
+                        <p class="text-muted">You don't meet the minimum CGPA requirement.</p>
+                    {% else %}
+                        <i class="fas fa-paper-plane fa-3x mb-3 text-primary"></i>
+                        <h5>Apply Now</h5>
+                        <p class="text-muted">Submit your application for this drive.</p>
+                        <a href="{{ url_for('apply_drive', drive_id=drive['id']) }}" class="btn btn-primary btn-lg">
+                            <i class="fas fa-check me-2"></i>Apply for this Drive
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <i class="fas fa-lock fa-3x mb-3 text-secondary"></i>
+                    <h5>Drive Not Available</h5>
+                    <p class="text-muted">This drive is currently {{ drive['status'] }}.</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

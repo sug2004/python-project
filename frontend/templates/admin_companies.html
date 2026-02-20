@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}Manage Companies{% endblock %}
+
+{% block content %}
+<h2>Manage Companies</h2>
+
+<form method="GET" class="mb-4">
+    <div class="input-group">
+        <input type="text" name="search" class="form-control" placeholder="Search by company name" value="{{ search }}">
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+</form>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>HR Contact</th>
+                    <th>Website</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                <tr>
+                    <td>{{ company.name }}</td>
+                    <td>{{ company.email }}</td>
+                    <td>{{ company.hr_contact }}</td>
+                    <td>{{ company.website }}</td>
+                    <td>
+                        <span class="badge bg-{{ 'success' if company.status == 'approved' else 'warning' if company.status == 'pending' else 'danger' }}">
+                            {{ company.status|title }}
+                        </span>
+                        {% if company.is_blacklisted %}
+                            <span class="badge bg-danger">Blacklisted</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if company.is_blacklisted %}
+                            <a href="{{ url_for('unblacklist_user', user_id=company.user_id) }}" class="btn btn-sm btn-success">Unblacklist</a>
+                        {% else %}
+                            <a href="{{ url_for('blacklist_user', user_id=company.user_id) }}" class="btn btn-sm btn-warning">Blacklist</a>
+                        {% endif %}
+                        <a href="{{ url_for('delete_company', company_id=company.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this company?')">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+{% endblock %}

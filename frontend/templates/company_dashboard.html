@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Company Dashboard{% endblock %}
+
+{% block content %}
+<h2>Company Dashboard</h2>
+
+<div class="card mt-4">
+    <div class="card-header bg-primary text-white">
+        <h5>Company Profile</h5>
+    </div>
+    <div class="card-body">
+        <p><strong>Name:</strong> {{ company.name }}</p>
+        <p><strong>Description:</strong> {{ company.description }}</p>
+        <p><strong>HR Contact:</strong> {{ company.hr_contact }}</p>
+        <p><strong>Website:</strong> {{ company.website }}</p>
+        <p><strong>Status:</strong> <span class="badge bg-{{ 'success' if company.status == 'approved' else 'warning' }}">{{ company.status|title }}</span></p>
+        <a href="{{ url_for('company_profile') }}" class="btn btn-sm btn-primary">Edit Profile</a>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>My Placement Drives</h5>
+        <a href="{{ url_for('create_drive') }}" class="btn btn-sm btn-success float-end">Create New Drive</a>
+    </div>
+    <div class="card-body">
+        {% if drives %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Min CGPA</th>
+                        <th>Deadline</th>
+                        <th>Status</th>
+                        <th>Applicants</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for drive in drives %}
+                    <tr>
+                        <td>{{ drive.title }}</td>
+                        <td>{{ drive.min_cgpa or 'N/A' }}</td>
+                        <td>{{ drive.deadline or 'N/A' }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if drive.status == 'approved' else 'warning' if drive.status == 'pending' else 'secondary' }}">
+                                {{ drive.status|title }}
+                            </span>
+                        </td>
+                        <td>{{ drive.applicant_count }}</td>
+                        <td>
+                            <a href="{{ url_for('view_applications', drive_id=drive.id) }}" class="btn btn-sm btn-info">View Applications</a>
+                            <a href="{{ url_for('edit_drive', drive_id=drive.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ url_for('close_drive', drive_id=drive.id) }}" class="btn btn-sm btn-secondary">Close</a>
+                            <a href="{{ url_for('delete_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this drive?')">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No drives created yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
