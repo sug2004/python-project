@@ -20,23 +20,23 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if session.role == 'admin' %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_students') }}"><i class="fas fa-user-graduate me-1"></i>Students</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_companies') }}"><i class="fas fa-building me-1"></i>Companies</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_drives') }}"><i class="fas fa-briefcase me-1"></i>Drives</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.students') }}"><i class="fas fa-user-graduate me-1"></i>Students</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.companies') }}"><i class="fas fa-building me-1"></i>Companies</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.drives') }}"><i class="fas fa-briefcase me-1"></i>Drives</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
                     {% elif session.role == 'company' %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('company_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('company_profile') }}"><i class="fas fa-user me-1"></i>Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('create_drive') }}"><i class="fas fa-plus-circle me-1"></i>Create Drive</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('company.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('company.profile') }}"><i class="fas fa-user me-1"></i>Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('company.create_drive') }}"><i class="fas fa-plus-circle me-1"></i>Create Drive</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
                     {% elif session.role == 'student' %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('student_profile') }}"><i class="fas fa-user me-1"></i>Profile</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('student.dashboard') }}"><i class="fas fa-tachometer-alt me-1"></i>Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('student.profile') }}"><i class="fas fa-user me-1"></i>Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}"><i class="fas fa-sign-out-alt me-1"></i>Logout</a></li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus me-1"></i>Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}"><i class="fas fa-sign-in-alt me-1"></i>Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.register') }}"><i class="fas fa-user-plus me-1"></i>Register</a></li>
                     {% endif %}
                 </ul>
             </div>

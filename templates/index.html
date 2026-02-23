@@ -5,8 +5,8 @@
     <h1 class="display-4">Welcome to Placement Portal</h1>
     <p class="lead">Manage campus recruitment activities efficiently</p>
     <div class="mt-4">
-        <a href="{{ url_for('login') }}" class="btn btn-primary btn-lg me-2">Login</a>
-        <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Register</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary btn-lg me-2">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-outline-primary btn-lg">Register</a>
     </div>
 </div>
 {% endblock %}

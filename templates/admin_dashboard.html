@@ -85,10 +85,10 @@
                                     <td><strong>{{ company.name }}</strong></td>
                                     <td>{{ company.email }}</td>
                                     <td>
-                                        <a href="{{ url_for('approve_company', company_id=company.id) }}" class="btn btn-sm btn-success">
+                                        <a href="{{ url_for('admin.approve_company', company_id=company.id) }}" class="btn btn-sm btn-success">
                                             <i class="fas fa-check"></i>
                                         </a>
-                                        <a href="{{ url_for('reject_company', company_id=company.id) }}" class="btn btn-sm btn-danger">
+                                        <a href="{{ url_for('admin.reject_company', company_id=company.id) }}" class="btn btn-sm btn-danger">
                                             <i class="fas fa-times"></i>
                                         </a>
                                     </td>
@@ -130,13 +130,13 @@
                                     <td><strong>{{ drive.title }}</strong></td>
                                     <td>{{ drive.company_name }}</td>
                                     <td>
-                                        <a href="{{ url_for('admin_drive_detail', drive_id=drive.id) }}" class="btn btn-sm btn-info">
+                                        <a href="{{ url_for('admin.drive_detail', drive_id=drive.id) }}" class="btn btn-sm btn-info">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <a href="{{ url_for('approve_drive', drive_id=drive.id) }}" class="btn btn-sm btn-success">
+                                        <a href="{{ url_for('admin.approve_drive', drive_id=drive.id) }}" class="btn btn-sm btn-success">
                                             <i class="fas fa-check"></i>
                                         </a>
-                                        <a href="{{ url_for('reject_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger">
+                                        <a href="{{ url_for('admin.reject_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger">
                                             <i class="fas fa-times"></i>
                                         </a>
                                     </td>
@@ -163,13 +163,13 @@
     </div>
     <div class="card-body">
         <div class="action-buttons">
-            <a href="{{ url_for('admin_students') }}" class="btn btn-primary">
+            <a href="{{ url_for('admin.students') }}" class="btn btn-primary">
                 <i class="fas fa-user-graduate me-2"></i>Manage Students
             </a>
-            <a href="{{ url_for('admin_companies') }}" class="btn btn-success">
+            <a href="{{ url_for('admin.companies') }}" class="btn btn-success">
                 <i class="fas fa-building me-2"></i>Manage Companies
             </a>
-            <a href="{{ url_for('admin_drives') }}" class="btn btn-warning">
+            <a href="{{ url_for('admin.drives') }}" class="btn btn-warning">
                 <i class="fas fa-briefcase me-2"></i>View All Drives
             </a>
         </div>

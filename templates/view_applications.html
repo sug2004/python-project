@@ -42,9 +42,9 @@
                             </span>
                         </td>
                         <td>
-                            <a href="{{ url_for('update_application_status', application_id=app.id, status='shortlisted') }}" class="btn btn-sm btn-warning">Shortlist</a>
-                            <a href="{{ url_for('update_application_status', application_id=app.id, status='selected') }}" class="btn btn-sm btn-success">Select</a>
-                            <a href="{{ url_for('update_application_status', application_id=app.id, status='rejected') }}" class="btn btn-sm btn-danger">Reject</a>
+                            <a href="{{ url_for('company.update_application_status', application_id=app.id, status='shortlisted') }}" class="btn btn-sm btn-warning">Shortlist</a>
+                            <a href="{{ url_for('company.update_application_status', application_id=app.id, status='selected') }}" class="btn btn-sm btn-success">Select</a>
+                            <a href="{{ url_for('company.update_application_status', application_id=app.id, status='rejected') }}" class="btn btn-sm btn-danger">Reject</a>
                         </td>
                     </tr>
                     {% endfor %}
@@ -56,5 +56,5 @@
     </div>
 </div>
 
-<a href="{{ url_for('company_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+<a href="{{ url_for('company.dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
 {% endblock %}

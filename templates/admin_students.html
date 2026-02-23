@@ -45,11 +45,11 @@
                     </td>
                     <td>
                         {% if student.is_blacklisted %}
-                            <a href="{{ url_for('unblacklist_user', user_id=student.user_id) }}" class="btn btn-sm btn-success">Unblacklist</a>
+                            <a href="{{ url_for('admin.unblacklist_user', user_id=student.user_id) }}" class="btn btn-sm btn-success">Unblacklist</a>
                         {% else %}
-                            <a href="{{ url_for('blacklist_user', user_id=student.user_id) }}" class="btn btn-sm btn-warning">Blacklist</a>
+                            <a href="{{ url_for('admin.blacklist_user', user_id=student.user_id) }}" class="btn btn-sm btn-warning">Blacklist</a>
                         {% endif %}
-                        <a href="{{ url_for('delete_student', student_id=student.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this student?')">Delete</a>
+                        <a href="{{ url_for('admin.delete_student', student_id=student.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this student?')">Delete</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -58,5 +58,5 @@
     </div>
 </div>
 
-<a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+<a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary mt-3">Back to Dashboard</a>
 {% endblock %}

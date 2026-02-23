@@ -15,14 +15,14 @@
         <p><strong>HR Contact:</strong> {{ company.hr_contact }}</p>
         <p><strong>Website:</strong> {{ company.website }}</p>
         <p><strong>Status:</strong> <span class="badge bg-{{ 'success' if company.status == 'approved' else 'warning' }}">{{ company.status|title }}</span></p>
-        <a href="{{ url_for('company_profile') }}" class="btn btn-sm btn-primary">Edit Profile</a>
+        <a href="{{ url_for('company.profile') }}" class="btn btn-sm btn-primary">Edit Profile</a>
     </div>
 </div>
 
 <div class="card mt-4">
     <div class="card-header">
         <h5>My Placement Drives</h5>
-        <a href="{{ url_for('create_drive') }}" class="btn btn-sm btn-success float-end">Create New Drive</a>
+        <a href="{{ url_for('company.create_drive') }}" class="btn btn-sm btn-success float-end">Create New Drive</a>
     </div>
     <div class="card-body">
         {% if drives %}
@@ -50,10 +50,10 @@
                         </td>
                         <td>{{ drive.applicant_count }}</td>
                         <td>
-                            <a href="{{ url_for('view_applications', drive_id=drive.id) }}" class="btn btn-sm btn-info">View Applications</a>
-                            <a href="{{ url_for('edit_drive', drive_id=drive.id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="{{ url_for('close_drive', drive_id=drive.id) }}" class="btn btn-sm btn-secondary">Close</a>
-                            <a href="{{ url_for('delete_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this drive?')">Delete</a>
+                            <a href="{{ url_for('company.view_applications', drive_id=drive.id) }}" class="btn btn-sm btn-info">View Applications</a>
+                            <a href="{{ url_for('company.edit_drive', drive_id=drive.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ url_for('company.close_drive', drive_id=drive.id) }}" class="btn btn-sm btn-secondary">Close</a>
+                            <a href="{{ url_for('company.delete_drive', drive_id=drive.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this drive?')">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}
