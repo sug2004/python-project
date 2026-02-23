@@ -68,6 +68,6 @@ db.commit()
 db.close()
 
 print("Database initialized successfully!")
-print("Admin user created successfully!")
+print("Admin credentials:")
 print("Email: admin@placement.com")
 print("Password: admin123")

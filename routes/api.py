@@ -1,10 +1,11 @@
-from flask import jsonify, request
-from app import app
-from database import get_db
+from flask import jsonify, request, Blueprint
+from models.database import get_db
 from werkzeug.security import generate_password_hash, check_password_hash
 
-@app.route('/api/register', methods=['POST'])
-def api_register():
+api_bp = Blueprint('api', __name__, url_prefix='/api')
+
+@api_bp.route('/register', methods=['POST'])
+def register():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -35,8 +36,8 @@ def api_register():
     db.commit()
     return jsonify({'message': 'Registration successful', 'user_id': user_id}), 201
 
-@app.route('/api/login', methods=['POST'])
-def api_login():
+@api_bp.route('/login', methods=['POST'])
+def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -62,26 +63,26 @@ def api_login():
         'role': user['role']
     }), 200
 
-@app.route('/api/students', methods=['GET'])
-def api_get_students():
+@api_bp.route('/students', methods=['GET'])
+def get_students():
     db = get_db()
     students = db.execute('SELECT s.*, u.email FROM students s JOIN users u ON s.user_id = u.id').fetchall()
     return jsonify([dict(s) for s in students]), 200
 
-@app.route('/api/companies', methods=['GET'])
-def api_get_companies():
+@api_bp.route('/companies', methods=['GET'])
+def get_companies():
     db = get_db()
     companies = db.execute('SELECT c.*, u.email FROM companies c JOIN users u ON c.user_id = u.id').fetchall()
     return jsonify([dict(c) for c in companies]), 200
 
-@app.route('/api/drives', methods=['GET'])
-def api_get_drives():
+@api_bp.route('/drives', methods=['GET'])
+def get_drives():
     db = get_db()
     drives = db.execute('SELECT d.*, c.name as company_name FROM drives d JOIN companies c ON d.company_id = c.id').fetchall()
     return jsonify([dict(d) for d in drives]), 200
 
-@app.route('/api/drives', methods=['POST'])
-def api_create_drive():
+@api_bp.route('/drives', methods=['POST'])
+def create_drive():
     data = request.get_json()
     db = get_db()
     
@@ -97,8 +98,8 @@ def api_create_drive():
     db.commit()
     return jsonify({'message': 'Drive created', 'drive_id': cursor.lastrowid}), 201
 
-@app.route('/api/applications', methods=['POST'])
-def api_apply():
+@api_bp.route('/applications', methods=['POST'])
+def apply():
     data = request.get_json()
     db = get_db()
     
@@ -122,53 +123,8 @@ def api_apply():
     db.commit()
     return jsonify({'message': 'Application submitted', 'application_id': cursor.lastrowid}), 201
 
-@app.route('/api/applications/<int:drive_id>', methods=['GET'])
-def api_get_applications(drive_id):
-    db = get_db()
-    applications = db.execute('''SELECT a.*, s.name, s.roll_number, s.branch, s.cgpa 
-                                FROM applications a 
-                                JOIN students s ON a.student_id = s.id 
-                                WHERE a.drive_id = ?''', (drive_id,)).fetchall()
-    return jsonify([dict(a) for a in applications]), 200
-
-@app.route('/api/applications/<int:application_id>/status', methods=['PUT'])
-def api_update_status(application_id):
-    data = request.get_json()
-    db = get_db()
-    db.execute('UPDATE applications SET status = ? WHERE id = ?', (data.get('status'), application_id))
-    db.commit()
-    return jsonify({'message': 'Status updated'}), 200
-
-@app.route('/api/companies/<int:company_id>/approve', methods=['PUT'])
-def api_approve_company(company_id):
-    db = get_db()
-    db.execute('UPDATE companies SET status = "approved" WHERE id = ?', (company_id,))
-    db.commit()
-    return jsonify({'message': 'Company approved'}), 200
-
-@app.route('/api/companies/<int:company_id>/reject', methods=['PUT'])
-def api_reject_company(company_id):
-    db = get_db()
-    db.execute('UPDATE companies SET status = "rejected" WHERE id = ?', (company_id,))
-    db.commit()
-    return jsonify({'message': 'Company rejected'}), 200
-
-@app.route('/api/drives/<int:drive_id>/approve', methods=['PUT'])
-def api_approve_drive(drive_id):
-    db = get_db()
-    db.execute('UPDATE drives SET status = "approved" WHERE id = ?', (drive_id,))
-    db.commit()
-    return jsonify({'message': 'Drive approved'}), 200
-
-@app.route('/api/users/<int:user_id>/blacklist', methods=['PUT'])
-def api_blacklist(user_id):
-    db = get_db()
-    db.execute('UPDATE users SET is_blacklisted = 1 WHERE id = ?', (user_id,))
-    db.commit()
-    return jsonify({'message': 'User blacklisted'}), 200
-
-@app.route('/api/stats', methods=['GET'])
-def api_stats():
+@api_bp.route('/stats', methods=['GET'])
+def stats():
     db = get_db()
     stats = {
         'total_students': db.execute('SELECT COUNT(*) as count FROM students').fetchone()['count'],
