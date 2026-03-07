@@ -7,6 +7,19 @@
     <h2><i class="fas fa-tachometer-alt me-2"></i>Student Dashboard</h2>
 </div>
 
+{% if notifications %}
+<div class="alert alert-info alert-dismissible fade show" role="alert">
+    <h5><i class="fas fa-bell me-2"></i>Notifications ({{ notifications|length }})</h5>
+    <ul class="mb-0">
+        {% for notif in notifications %}
+        <li>{{ notif.message }} <small class="text-muted">({{ notif.created_at }})</small></li>
+        {% endfor %}
+    </ul>
+    <a href="{{ url_for('student.mark_notifications_read') }}" class="btn btn-sm btn-light mt-2">Mark all as read</a>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+{% endif %}
+
 <div class="row mb-4">
     <div class="col-md-4">
         <div class="card stat-card info">

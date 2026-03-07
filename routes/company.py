@@ -135,7 +135,13 @@ def update_application_status(application_id, status):
         return redirect(url_for('auth.login'))
     
     db = get_db()
+    app = db.execute('SELECT student_id FROM applications WHERE id = ?', (application_id,)).fetchone()
     db.execute('UPDATE applications SET status = ? WHERE id = ?', (status, application_id))
+    
+    # Create notification for student
+    message = f'Your application status has been updated to: {status.upper()}'
+    db.execute('INSERT INTO notifications (student_id, message) VALUES (?, ?)', (app['student_id'], message))
+    
     db.commit()
     flash(f'Application status updated to {status}')
     return redirect(request.referrer)

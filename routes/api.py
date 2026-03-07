@@ -133,3 +133,71 @@ def stats():
         'total_applications': db.execute('SELECT COUNT(*) as count FROM applications').fetchone()['count']
     }
     return jsonify(stats), 200
+
+@api_bp.route('/applications/<int:drive_id>', methods=['GET'])
+def get_applications(drive_id):
+    db = get_db()
+    applications = db.execute('''SELECT a.*, s.name, s.roll_number, s.branch, s.cgpa 
+                                FROM applications a 
+                                JOIN students s ON a.student_id = s.id 
+                                WHERE a.drive_id = ?''', (drive_id,)).fetchall()
+    return jsonify([dict(a) for a in applications]), 200
+
+@api_bp.route('/applications/<int:application_id>/status', methods=['PUT'])
+def update_status(application_id):
+    data = request.get_json()
+    status = data.get('status')
+    
+    if status not in ['applied', 'shortlisted', 'selected', 'rejected']:
+        return jsonify({'error': 'Invalid status'}), 400
+    
+    db = get_db()
+    app = db.execute('SELECT student_id FROM applications WHERE id = ?', (application_id,)).fetchone()
+    
+    if not app:
+        return jsonify({'error': 'Application not found'}), 404
+    
+    db.execute('UPDATE applications SET status = ? WHERE id = ?', (status, application_id))
+    
+    # Create notification
+    message = f'Your application status has been updated to: {status.upper()}'
+    db.execute('INSERT INTO notifications (student_id, message) VALUES (?, ?)', (app['student_id'], message))
+    
+    db.commit()
+    return jsonify({'message': 'Status updated', 'status': status}), 200
+
+@api_bp.route('/companies/<int:company_id>/approve', methods=['PUT'])
+def approve_company(company_id):
+    db = get_db()
+    db.execute('UPDATE companies SET status = "approved" WHERE id = ?', (company_id,))
+    db.commit()
+    return jsonify({'message': 'Company approved'}), 200
+
+@api_bp.route('/companies/<int:company_id>/reject', methods=['PUT'])
+def reject_company(company_id):
+    db = get_db()
+    db.execute('UPDATE companies SET status = "rejected" WHERE id = ?', (company_id,))
+    db.commit()
+    return jsonify({'message': 'Company rejected'}), 200
+
+@api_bp.route('/drives/<int:drive_id>/approve', methods=['PUT'])
+def approve_drive(drive_id):
+    db = get_db()
+    db.execute('UPDATE drives SET status = "approved" WHERE id = ?', (drive_id,))
+    db.commit()
+    return jsonify({'message': 'Drive approved'}), 200
+
+@api_bp.route('/drives/<int:drive_id>', methods=['DELETE'])
+def delete_drive(drive_id):
+    db = get_db()
+    db.execute('DELETE FROM applications WHERE drive_id = ?', (drive_id,))
+    db.execute('DELETE FROM drives WHERE id = ?', (drive_id,))
+    db.commit()
+    return jsonify({'message': 'Drive deleted'}), 200
+
+@api_bp.route('/users/<int:user_id>/blacklist', methods=['PUT'])
+def blacklist(user_id):
+    db = get_db()
+    db.execute('UPDATE users SET is_blacklisted = 1 WHERE id = ?', (user_id,))
+    db.commit()
+    return jsonify({'message': 'User blacklisted'}), 200

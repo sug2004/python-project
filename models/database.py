@@ -73,6 +73,15 @@ def init_db(app):
             FOREIGN KEY (drive_id) REFERENCES drives(id)
         )''')
         
+        cursor.execute('''CREATE TABLE IF NOT EXISTS notifications (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            student_id INTEGER NOT NULL,
+            message TEXT NOT NULL,
+            is_read INTEGER DEFAULT 0,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (student_id) REFERENCES students(id)
+        )''')
+        
         db.commit()
         db.close()
     

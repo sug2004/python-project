@@ -23,7 +23,13 @@ def dashboard():
                                 JOIN drives d ON a.drive_id = d.id 
                                 JOIN companies c ON d.company_id = c.id 
                                 WHERE a.student_id = ?''', (student['id'],)).fetchall()
-    return render_template('student_dashboard.html', student=student, drives=drives, applications=applications)
+    
+    # Get unread notifications
+    notifications = db.execute('''SELECT * FROM notifications WHERE student_id = ? AND is_read = 0 
+                                 ORDER BY created_at DESC''', (student['id'],)).fetchall()
+    
+    return render_template('student_dashboard.html', student=student, drives=drives, 
+                         applications=applications, notifications=notifications)
 
 @student_bp.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -102,3 +108,14 @@ def drive_detail(drive_id):
     
     return render_template('student_drive_detail.html', drive=drive, student=student, 
                          application=application, applicant_count=applicant_count)
+
+@student_bp.route('/mark_notifications_read')
+def mark_notifications_read():
+    if session.get('role') != 'student':
+        return redirect(url_for('auth.login'))
+    
+    db = get_db()
+    student = db.execute('SELECT * FROM students WHERE user_id = ?', (session['user_id'],)).fetchone()
+    db.execute('UPDATE notifications SET is_read = 1 WHERE student_id = ?', (student['id'],))
+    db.commit()
+    return redirect(url_for('student.dashboard'))
